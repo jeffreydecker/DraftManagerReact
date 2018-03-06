@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import { Popover, Tooltip, Button, Modal, OverlayTrigger, Form, FormGroup, Col, ControlLabel, FormControl, InputGroup } from 'react-bootstrap';
+import { Popover, Tooltip, Button, Modal, OverlayTrigger, Form, FormGroup, Col, ControlLabel, FormControl, InputGroup, Panel } from 'react-bootstrap';
 import logo from './logo.svg';
 import './App.css';
 
@@ -39,25 +39,37 @@ class PlayersTable extends Component {
     //   return <tr key={i}><td>{name.rank}</td><td>{name.name}</td></tr>
     // })
 
+    var loading = null
+    if (this.state.rank.length == 0) {
+      loading = <img src={logo} className="App-logo" alt="logo" />
+    }
+
     return (
-      <div className="container panel-default table-responsive">
-      <table className="table table-sm table-striped table-hover table-condensed">
-        <tbody>
-          {
-            this.state.rank.map((player, i) => {
-              return <RankingRow key={player.id} player={player} showModal={this.props.showModal}/>
-            })
-          }
-        </tbody>
-      </table>
-    </div>
+      <Panel className="table-responsive">
+          <Panel.Heading>
+            <Panel.Title componentClass="h3">Available Players</Panel.Title>
+          </Panel.Heading>
+          <Panel.Body>
+            Search and Position Filter Go Here
+          </Panel.Body>
+          { loading }
+          <table className="table table-sm table-striped table-hover table-condensed">
+            <tbody>
+              {
+                this.state.rank.map((player, i) => {
+                  return <RankingRow key={player.id} player={player} showModal={this.props.showModal}/>
+                })
+              }
+            </tbody>
+          </table>
+        </Panel>
     )
   }
 }
 
 class RankingRow extends Component {
   click() {
-    this.props.showModal(<PlayerStats playerId={this.props.player.id} />, <h1>{this.props.player.name} - {this.props.player.team}</h1>)
+    this.props.showModal(<PlayerStats playerId={this.props.player.id} />, <div><img src={`https://images.fantasypros.com/images/mlb/players/70x70/${this.props.player.id}.jpg`}/><h1>{this.props.player.name} - {this.props.player.team}</h1></div>)
   }
 
   render() {
@@ -122,7 +134,8 @@ class PlayerStats extends Component {
 class HitterStatsTable extends Component {
   render() {
     return (
-      <table className="table table-sm table-striped table-hover table-condensed table-nonfluid">
+      <div className="table-responsive">
+      <table className="table table-sm table-striped table-condensed">
           <thead>
             <tr>
               <th>Pos</th>
@@ -162,6 +175,7 @@ class HitterStatsTable extends Component {
             </tr>
         </tbody>
       </table>
+      </div>
     )
   }
 }
@@ -169,7 +183,8 @@ class HitterStatsTable extends Component {
 class PitcherStatsTable extends Component {
   render() {
     return (
-      <table className="table table-sm table-striped table-hover table-condensed table-nonfluid">
+      <div className="table-responsive">
+      <table className="table table-sm table-striped table-condensed">
         <tbody>
           <tr>
             <th>Pos</th>
@@ -207,6 +222,7 @@ class PitcherStatsTable extends Component {
           </tr>
         </tbody>
       </table>
+      </div>
     )
   }
 }
