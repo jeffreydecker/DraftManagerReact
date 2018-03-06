@@ -6,7 +6,9 @@ import './App.css';
 
 class PlayersTable extends Component {
   state = {
-    response: []
+    rank: [],
+    hit: [],
+    pitch: []
   };
 
   async componentDidMount() {
@@ -16,12 +18,18 @@ class PlayersTable extends Component {
 
     // TODO - Show loading
 
-    const response = await fetch('http://localhost:8080/scrape/rankings');
-    const body = await response.json();
+    var response = await fetch('http://localhost:8080/scrape/rankings');
+    const rankings = await response.json();
 
-    if (response.status !== 200) throw Error(body.message);
+    response = await fetch('http://localhost:8080/scrape/hitter');
+    const hitters = await response.json();
 
-    this.setState({ response: body });
+    response = await fetch('http://localhost:8080/scrape/pitcher');
+    const pitchers = await response.json();
+
+    if (response.status !== 200) throw Error("Error fetching stats and rankings");
+
+    this.setState({ rank: rankings, hit: hitters.players, pitch: pitchers.players });
 
     // TODO - Hide loading
   }
@@ -36,8 +44,8 @@ class PlayersTable extends Component {
       <table className="table table-sm table-striped table-hover table-condensed">
         <tbody>
           {
-            this.state.response.map((name, i) => {
-              return <RankingRow key={name.id} player={name} showModal={this.props.showModal}/>
+            this.state.rank.map((player, i) => {
+              return <RankingRow key={player.id} player={player} showModal={this.props.showModal}/>
             })
           }
         </tbody>
@@ -104,6 +112,7 @@ class PlayerStats extends Component {
         { loading }
         { hittingStats }
         { pitchingStats }
+        <hr/>
         <DraftForm />
       </div>
     )
@@ -231,7 +240,6 @@ class DraftForm extends Component {
             </InputGroup>
           </Col>
         </FormGroup>
-
 
         <FormGroup>
           <Col smOffset={2} sm={10}>
