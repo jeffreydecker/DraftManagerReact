@@ -57,7 +57,7 @@ class PlayersTable extends Component {
             <tbody>
               {
                 this.state.rank.map((player, i) => {
-                  return <RankingRow key={player.id} player={player} showModal={this.props.showModal}/>
+                  return <RankingRow key={player.id} player={player} league={this.props.league} showModal={this.props.showModal}/>
                 })
               }
             </tbody>
@@ -69,7 +69,7 @@ class PlayersTable extends Component {
 
 class RankingRow extends Component {
   click() {
-    this.props.showModal(<PlayerStats playerId={this.props.player.id} />, <div><img src={`https://images.fantasypros.com/images/mlb/players/70x70/${this.props.player.id}.jpg`}/><h1>{this.props.player.name} - {this.props.player.team}</h1></div>)
+    this.props.showModal(<PlayerStats playerId={this.props.player.id} league={this.props.league}/>, <div><img src={`https://images.fantasypros.com/images/mlb/players/70x70/${this.props.player.id}.jpg`}/><h1>{this.props.player.name} - {this.props.player.team}</h1></div>)
   }
 
   render() {
@@ -125,7 +125,7 @@ class PlayerStats extends Component {
         { hittingStats }
         { pitchingStats }
         <hr/>
-        <DraftForm />
+        <DraftForm league={this.props.league}/>
       </div>
     )
   }
@@ -230,6 +230,12 @@ class PitcherStatsTable extends Component {
 class DraftForm extends Component {
   render() {
     // TODO - Loop through list of teams for selector
+
+    var teamOptions = this.props.league.teams.map((team, i) => {
+       return <option value={team.id}>{team.name}</option>
+
+    })
+
     return (
       <Form horizontal>
 
@@ -238,10 +244,12 @@ class DraftForm extends Component {
             Team
           </Col>
           <Col sm={8}>
-            <FormControl componentClass="select" placeholder="select">
-              <option value="select"></option>
-              <option value="other">...</option>
-            </FormControl>
+            <InputGroup>
+              <FormControl componentClass="select" placeholder="select">
+                <option value="default"></option>
+                { teamOptions }
+              </FormControl>
+            </InputGroup>
           </Col>
         </FormGroup>
 

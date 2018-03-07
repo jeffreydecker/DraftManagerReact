@@ -4,6 +4,7 @@ import { Popover, Tooltip, Button, Modal, OverlayTrigger, Form, FormGroup, Col, 
 import logo from './logo.svg';
 import './App.css';
 import PlayersTable from './PlayersTable.js'
+import LeagueForm from './LeagueForm.js'
 
 class App extends Component {
 
@@ -12,23 +13,46 @@ class App extends Component {
 
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.onLeagueCreate = this.onLeagueCreate.bind(this);
 
     this.state = {
-      show: false,
+      showModal: false,
       modalTitle: null,
-      modalBody: null
+      modalBody: null,
+      league: null,
     }
   }
 
   handleClose() {
-    this.setState({ show: false });
+    this.setState({ showModal: false });
   }
 
   handleShow(child, title) {
-    this.setState({ show: true, modalChild: child, modalTitle: title });
+    this.setState({ showModal: true, modalChild: child, modalTitle: title });
+  }
+
+  onLeagueCreate(newLeague) {
+    this.setState({ league: newLeague})
+  }
+
+  addTeam(teamName, draftBudget, rosterSize) {
+    this.state.teams.push({
+      name: teamName,
+      budget: draftBudget,
+      players: [],
+      minors: []
+    })
   }
 
   render() {
+
+    var main = null
+    if (this.state.league != null) {
+      main = <PlayersTable showModal={this.handleShow} league={this.state.league}/>
+    } else {
+      main = <LeagueForm onLeagueCreate={this.onLeagueCreate}/>
+    }
+
     return (
       <div>
         <nav className="navbar navbar-inverse navbar-fixed-top">
@@ -36,8 +60,8 @@ class App extends Component {
             <a className="navbar-brand" href="#">Draft Manager</a>
           </div>
         </nav>
-        <PlayersTable showModal={this.handleShow}/>
-        <AppModal show={this.state.show} title={this.state.modalTitle} child={this.state.modalChild} handleClose={this.handleClose}/>
+        { main }
+        <AppModal show={this.state.showModal} title={this.state.modalTitle} child={this.state.modalChild} handleClose={this.handleClose}/>
         <div id="playerstats"></div>
       </div>
     )
