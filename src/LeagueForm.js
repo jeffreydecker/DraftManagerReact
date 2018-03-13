@@ -51,7 +51,9 @@ class LeagueForm extends Component {
         id: Math.random().toString(36).substr(2, 9),
         name: `Team${i}`,
         players: [],
+        // playerSpots: this.state.playerSpots,
         minors: [],
+        // minorsSpots: this.state.minorsSpots,
         budget: this.state.budget
       })
     }
@@ -60,7 +62,7 @@ class LeagueForm extends Component {
       id: Math.random().toString(36).substr(2, 9),
       name: this.state.name,
       teams: this.state.teams,
-      roster: this.state.rosterSize,
+      rosterSize: this.state.rosterSize,
       minorsSpots: this.state.minorsSpots,
       budget: this.state.budget,
       teams: leagueTeams

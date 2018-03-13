@@ -69,6 +69,7 @@ class PlayersTable extends Component {
 
 class RankingRow extends Component {
   click() {
+    // TODO - Reuse already fetched stats here
     this.props.showModal(<PlayerStats playerId={this.props.player.id} league={this.props.league}/>, <div><img src={`https://images.fantasypros.com/images/mlb/players/70x70/${this.props.player.id}.jpg`}/><h1>{this.props.player.name} - {this.props.player.team}</h1></div>)
   }
 
@@ -228,16 +229,40 @@ class PitcherStatsTable extends Component {
 }
 
 class DraftForm extends Component {
-  render() {
-    // TODO - Loop through list of teams for selector
+  constructor() {
+    super();
 
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+
+    this.state = {
+      price: null,
+      winner: null
+    };
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  render() {
     var teamOptions = this.props.league.teams.map((team, i) => {
        return <option value={team.id}>{team.name}</option>
 
-    })
+    });
 
     return (
-      <Form horizontal>
+      <Form horizontal onSubmit={this.handleSubmit}>
 
         <FormGroup controlId="draftFormTeam">
           <Col componentClass={ControlLabel} sm={2}>
@@ -245,8 +270,8 @@ class DraftForm extends Component {
           </Col>
           <Col sm={8}>
             <InputGroup>
-              <FormControl componentClass="select" placeholder="select">
-                <option value="default"></option>
+              <FormControl componentClass="select" name="team" value={this.state.price} onChange={this.handleInputChange}>
+                <option value="">Pick a Team</option>
                 { teamOptions }
               </FormControl>
             </InputGroup>
@@ -260,7 +285,7 @@ class DraftForm extends Component {
           <Col sm={8}>
             <InputGroup>
               <InputGroup.Addon>$</InputGroup.Addon>
-              <FormControl type="number" />
+              <FormControl type="number" placeholder="Price" name="price" value={this.state.price} onChange={this.handleInputChange}/>
             </InputGroup>
           </Col>
         </FormGroup>

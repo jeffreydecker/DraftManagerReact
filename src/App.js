@@ -5,6 +5,7 @@ import logo from './logo.svg';
 import './App.css';
 import PlayersTable from './PlayersTable.js'
 import LeagueForm from './LeagueForm.js'
+import TeamsTable from './TeamsTable.js'
 
 class App extends Component {
 
@@ -48,7 +49,10 @@ class App extends Component {
 
     var main = null
     if (this.state.league != null) {
-      main = <PlayersTable showModal={this.handleShow} league={this.state.league}/>
+      main = <div>
+        <TeamsTable showModal={this.handleShow} league={this.state.league}/>
+        <PlayersTable showModal={this.handleShow} league={this.state.league}/>
+      </div>
     } else {
       main = <LeagueForm onLeagueCreate={this.onLeagueCreate}/>
     }
